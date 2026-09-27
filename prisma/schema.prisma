@@ -1,0 +1,82 @@
+// -------------------------------------------------------------
+// Ferienzeit – Datenbankschema
+// SQLite für den MVP. Das Schema ist portabel (Postgres/MySQL).
+//
+// Block-Modell ist bewusst generisch gehalten: `source` speichert,
+// woher ein Block stammt ("manual", "airbnb", "booking", "direct").
+// So kann später ein iCal-Importer die Tabelle befüllen, ohne dass
+// das Schema sich ändern muss.
+// -------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Apartment {
+  id               String    @id @default(cuid())
+  slug             String    @unique
+  name             String
+  tagline          String
+  shortDescription String
+  description      String
+  priceFrom        Int       // in Cent, z. B. 9500 = 95,00 €
+  maxGuests        Int
+  bedrooms         Int
+  sizeSqm          Int
+  features         String    // JSON-Array als String
+  images           String    // JSON-Array URLs
+  airbnbUrl        String?
+  bookingUrl       String?
+  published        Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  inquiries        Inquiry[]
+  blocks           Block[]
+}
+
+model Inquiry {
+  id          String   @id @default(cuid())
+  apartmentId String
+  apartment   Apartment @relation(fields: [apartmentId], references: [id])
+  arrival     DateTime
+  departure   DateTime
+  guests      Int
+  name        String
+  email       String
+  phone       String?
+  message     String
+  // status: new | read | confirmed | declined | archived
+  status      String   @default("new")
+  createdAt   DateTime @default(now())
+
+  @@index([apartmentId, createdAt])
+}
+
+model Block {
+  id          String   @id @default(cuid())
+  apartmentId String
+  apartment   Apartment @relation(fields: [apartmentId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  // reason: manual | maintenance | booking
+  reason      String   @default("manual")
+  // source: manual | airbnb | booking | direct  (für späteren iCal-Sync)
+  source      String   @default("manual")
+  note        String?
+  createdAt   DateTime @default(now())
+
+  @@index([apartmentId, startDate, endDate])
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

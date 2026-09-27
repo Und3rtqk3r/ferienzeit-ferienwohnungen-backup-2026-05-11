@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -----------------------------------------------------------
+   Basis-Typografie & Grundfarben
+   ----------------------------------------------------------- */
+@layer base {
+  :root {
+    --color-bg: #f5f1e8;
+    --color-bg-soft: #fbf9f4;
+    --color-ink: #1c2620;
+    --color-moss: #5a6b4f;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "ss01", "ss02";
+  }
+
+  /* Subtle paper texture */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+    background-image: radial-gradient(
+        rgba(28, 38, 32, 0.025) 1px,
+        transparent 1px
+      );
+    background-size: 3px 3px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-fraunces), Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: #5a6b4f;
+    color: #f5f1e8;
+  }
+
+  :focus-visible {
+    outline: 2px solid #5a6b4f;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* -----------------------------------------------------------
+   Utility-Klassen
+   ----------------------------------------------------------- */
+@layer components {
+  .eyebrow {
+    @apply text-xs uppercase tracking-[0.22em] text-moss-600 font-medium;
+  }
+
+  .link-underline {
+    @apply relative inline-block;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0% 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    transition: background-size 0.3s ease;
+  }
+  .link-underline:hover {
+    background-size: 0% 1px;
+  }
+
+  .hairline {
+    @apply block h-px w-full bg-ink/10;
+  }
+
+  /* Platform external link button */
+  .platform-link {
+    @apply flex items-center justify-between w-full border border-ink/12 bg-parchment/60 px-4 py-3 rounded-sm text-sm transition-all duration-200;
+  }
+  .platform-link:hover {
+    @apply border-ink/25 bg-parchment;
+  }
+}
+
+/* -----------------------------------------------------------
+   react-day-picker v9 — palette overrides
+   ----------------------------------------------------------- */
+.rdp-root {
+  --rdp-accent-color: #5a6b4f;
+  --rdp-accent-background-color: rgba(90, 107, 79, 0.1);
+  --rdp-today-color: #5a6b4f;
+  --rdp-range_start-date-background-color: #5a6b4f;
+  --rdp-range_end-date-background-color: #5a6b4f;
+  --rdp-range_middle-background-color: rgba(90, 107, 79, 0.1);
+  --rdp-range_start-color: #fbf9f4;
+  --rdp-range_end-color: #fbf9f4;
+  --rdp-disabled-opacity: 0.45;
+  --rdp-day-height: 44px;
+  --rdp-day-width: 44px;
+  --rdp-day_button-height: 40px;
+  --rdp-day_button-width: 40px;
+  margin: 0;
+  font-family: var(--font-figtree), ui-sans-serif, sans-serif;
+  font-size: 0.9rem;
+}
+.rdp-selected .rdp-day_button {
+  background-color: #5a6b4f;
+  color: #fbf9f4;
+  border-color: #5a6b4f;
+}
+.rdp-disabled:not(.rdp-selected) .rdp-day_button {
+  text-decoration: line-through;
+  color: #a9a391;
+}
+.rdp-caption_label {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 400;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+}
+.rdp-button_previous,
+.rdp-button_next {
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  border-radius: 6px;
+}
+.rdp-button_previous:hover,
+.rdp-button_next:hover {
+  background-color: rgba(90, 107, 79, 0.1);
+}
+.rdp-day_button:hover:not(:disabled) {
+  background-color: rgba(90, 107, 79, 0.08);
+}
